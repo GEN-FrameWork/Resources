@@ -67,7 +67,7 @@ Providers: **Open-Meteo** geocoding + forecast (primary) → **Nominatim** geoco
 
 **Script path (default):** `scrapers/translation.g`
 
-Providers: **Google Translate free** `client=gtx` (primary) → **MyMemory** `api.mymemory.translated.net` (fallback). No API key. Legacy XML Google URL is not used.
+Providers: **Google Translate free** `client=gtx` (primary) → **MyMemory** `api.mymemory.translated.net` (fallback). No API key. Legacy XML Google URL is not used. Scripts percent-encode the query (space/newline/tab/`&`/`#`/`+`/`?`/`=`/quotes/braces, and `%` via a `__PCT__` placeholder then `%25` — direct `%`→`%25` would infinite-loop in `XSTRING::Replace`) so reserved URL characters and TranslateScan-style `__PFn__` tokens stay intact.
 
 | Direction | Name | Type | Notes |
 |-----------|------|------|--------|
