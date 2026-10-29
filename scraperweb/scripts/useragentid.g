@@ -1,4 +1,4 @@
-// User-Agent ID scraper — useragentstring.com primary + non-www HTTP fallback (no API key).
+// User-Agent ID scraper — useragentstring.com primary, HTTP fallback, useragentlookup.com tertiary (no API key).
 // Contract:
 //   args   : ua (URL-encoded User-Agent, required), timeout (optional)
 //   results: ok, browser, browser_version, browser_type, os, os_type, os_version, language, language_tag
@@ -75,6 +75,25 @@ int main()
             }
           language    = ExtractBetween(body, "\"agent_language\":\"", "\"");
           languagetag = ExtractBetween(body, "\"agent_languageTag\":\"", "\"");
+        }
+    }
+
+  // Tertiary: useragentlookup.com (free, no key) when useragentstring.com is down.
+  if(IsEmptyString(browser))
+    {
+      url = "https://www.useragentlookup.com/api/user-agent?ua=";
+      url = AddString(url, ua);
+      if(WebClient_Get(url, "", timeout))
+        {
+          body = WebClient_GetBody();
+          browser        = ExtractBetween(body, "\"name\":\"", "\"");
+          browserversion = ExtractBetween(body, "\"version\":\"", "\"");
+          browsertype    = ExtractBetween(body, "\"type\":\"", "\"");
+          osname         = ExtractBetween(body, "\"operating_system\":\"", "\"");
+          ostype         = ExtractBetween(body, "\"platform\":\"", "\"");
+          osversion      = "";
+          language       = "";
+          languagetag    = "";
         }
     }
 

@@ -106,7 +106,7 @@ Providers: **api.maclookup.app/v2/macs** (primary) → **api.macvendors.com** pl
 
 **Script path (default):** `scrapers/useragentid.g` (facade default file name `useragentid.g` under the SCRAPERS section).
 
-Providers: **www.useragentstring.com** `getJSON=all` (primary) → **useragentstring.com** HTTP (fallback). No API key. The C++ facade URL-encodes the User-Agent (`DIOURL::EncodeUnsafeCharsFromString`) and passes it as arg `ua`.
+Providers: **www.useragentstring.com** `getJSON=all` (primary) → **useragentstring.com** HTTP (fallback) → **www.useragentlookup.com** `/api/user-agent` (tertiary). No API key. The C++ facade URL-encodes the User-Agent (`DIOURL::EncodeUnsafeCharsFromString`) and passes it as arg `ua`.
 
 | Direction | Name | Type | Notes |
 |-----------|------|------|--------|
@@ -114,14 +114,14 @@ Providers: **www.useragentstring.com** `getJSON=all` (primary) → **useragentst
 | arg | `timeout` | int | Seconds; default 10 if ≤ 0 |
 | arg | `localIP` | string | Optional |
 | result | `ok` | `"1"` / `"0"` | Success flag |
-| result | `browser` | string | `agent_name` |
-| result | `browser_version` | string | `agent_version` |
-| result | `browser_type` | string | `agent_type` (Browser, Robot, …) |
-| result | `os` | string | `os_name` (legacy SO field) |
-| result | `os_type` | string | `os_type` |
-| result | `os_version` | string | `os_versionNumber` or `os_versionName` |
-| result | `language` | string | `agent_language` |
-| result | `language_tag` | string | `agent_languageTag` |
+| result | `browser` | string | `agent_name` / lookup `name` |
+| result | `browser_version` | string | `agent_version` / lookup `version` |
+| result | `browser_type` | string | `agent_type` / lookup `type` |
+| result | `os` | string | `os_name` / lookup `operating_system` |
+| result | `os_type` | string | `os_type` / lookup `platform` |
+| result | `os_version` | string | `os_versionNumber`/`os_versionName` (empty on tertiary) |
+| result | `language` | string | `agent_language` (empty on tertiary) |
+| result | `language_tag` | string | `agent_languageTag` (empty on tertiary) |
 
 **C++ API:** `DIOSCRAPERWEBUSERAGENTID::Get(…, DIOUSERAGENTID_RESULT&, …)` (also legacy `browser`/`systemoperative` out-params). Cache key: raw User-Agent string.
 
